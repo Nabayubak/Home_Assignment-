@@ -1,0 +1,421 @@
+{
+	"info": {
+		"_postman_id": "workforce-api-id",
+		"name": "Workforce APIs",
+		"description": "Collection for managing Workforce Employees and Training modules.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Employees",
+			"item": [
+				{
+					"name": "Create Employee (Positive)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", () => {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"const jsonData = pm.response.json();",
+									"pm.test(\"Response has required fields\", () => {",
+									"    pm.expect(jsonData).to.have.property(\"id\");",
+									"    pm.expect(jsonData).to.have.property(\"email\");",
+									"    pm.expect(jsonData).to.have.property(\"name\");",
+									"});",
+									"",
+									"pm.test(\"Save employee ID\", () => {",
+									"    pm.expect(jsonData.id).to.not.be.undefined;",
+									"    pm.environment.set(\"employeeId\", jsonData.id);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"{{randomName}}\",\n    \"email\": \"{{randomEmail}}\",\n    \"role\": \"Engineer\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/employees",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "employees"]
+						}
+					}
+				},
+				{
+					"name": "Retrieve Employee (Positive)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const jsonData = pm.response.json();",
+									"pm.test(\"Employee ID matches\", () => {",
+									"    pm.expect(jsonData.id).to.eql(pm.environment.get(\"employeeId\"));",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/employees/{{employeeId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "employees", "{{employeeId}}"]
+						}
+					}
+				},
+				{
+					"name": "Update Employee (Positive)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Updated Name\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/employees/{{employeeId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "employees", "{{employeeId}}"]
+						}
+					}
+				},
+				{
+					"name": "Delete Employee (Positive)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 204\", () => {",
+									"    pm.response.to.have.status(204);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/employees/{{employeeId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "employees", "{{employeeId}}"]
+						}
+					}
+				},
+				{
+					"name": "Create Employee - Duplicate Email (Negative)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 409\", () => {",
+									"    pm.response.to.have.status(409);",
+									"});",
+									"pm.test(\"Error message is present\", () => {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.include(\"already exists\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"Dup User\",\n    \"email\": \"existing@example.com\",\n    \"role\": \"Engineer\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/employees",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "employees"]
+						}
+					}
+				},
+				{
+					"name": "Retrieve Employee - Missing ID (Negative)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400 or 404\", () => {",
+									"    pm.expect(pm.response.code).to.be.oneOf([400, 404]);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/api/employees/ ",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "employees", " "]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Training",
+			"item": [
+				{
+					"name": "Assign Training (Positive)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"const jsonData = pm.response.json();",
+									"pm.test(\"Training ID assigned\", () => {",
+									"    pm.expect(jsonData).to.have.property(\"trainingId\");",
+									"    pm.environment.set(\"trainingId\", jsonData.trainingId);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"employeeId\": \"{{employeeId}}\",\n    \"trainingId\": \"T101\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/trainings/assign",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "trainings", "assign"]
+						}
+					}
+				},
+				{
+					"name": "Complete Training (Positive)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Training marked as completed\", () => {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.status).to.eql(\"completed\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"employeeId\": \"{{employeeId}}\",\n    \"trainingId\": \"{{trainingId}}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/trainings/complete",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "trainings", "complete"]
+						}
+					}
+				},
+				{
+					"name": "Approve Training (Positive)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"pm.test(\"Training approved\", () => {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.approved).to.be.true;",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"employeeId\": \"{{employeeId}}\",\n    \"trainingId\": \"{{trainingId}}\",\n    \"approverId\": \"ADMIN_01\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/trainings/approve",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "trainings", "approve"]
+						}
+					}
+				},
+				{
+					"name": "Assign Training - Invalid Training ID (Negative)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", () => {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Invalid ID error\", () => {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.include(\"invalid training ID\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"employeeId\": \"{{employeeId}}\",\n    \"trainingId\": \"INVALID_ID\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/trainings/assign",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "trainings", "assign"]
+						}
+					}
+				},
+				{
+					"name": "Complete Training - Unassigned (Negative)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", () => {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Unassigned error\", () => {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.include(\"not assigned\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"employeeId\": \"{{employeeId}}\",\n    \"trainingId\": \"UNASSIGNED_TRAINING\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/trainings/complete",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "trainings", "complete"]
+						}
+					}
+				},
+				{
+					"name": "Approve Training - Non-Completed (Negative)",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 400\", () => {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"pm.test(\"Non-completed error\", () => {",
+									"    const jsonData = pm.response.json();",
+									"    pm.expect(jsonData.error).to.include(\"not completed\");",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{ "key": "Content-Type", "value": "application/json" }
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"employeeId\": \"{{employeeId}}\",\n    \"trainingId\": \"NOT_COMPLETED_ID\",\n    \"approverId\": \"ADMIN_01\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/trainings/approve",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "trainings", "approve"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
