@@ -1,0 +1,16 @@
+{
+  "validEmployee": {
+    "firstName": "John",
+    "lastName": "Doe",
+    "email": "john.doe@example.com",
+    "position": "Software Engineer",
+    "department": "Engineering"
+  },
+  "duplicateEmployee": {
+    "firstName": "Jane",
+    "lastName": "Smith",
+    "email": "john.doe@example.com",
+    "position": "Product Manager",
+    "department": "Product"
+  }
+}

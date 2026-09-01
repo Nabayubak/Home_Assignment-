@@ -1,0 +1,7 @@
+# Project Dependencies Summary
+# NOTE: This is a Node.js project. Dependencies are officially managed in package.json.
+# Use 'npm install' to install all requirements.
+
+cypress
+typescript
+@types/node

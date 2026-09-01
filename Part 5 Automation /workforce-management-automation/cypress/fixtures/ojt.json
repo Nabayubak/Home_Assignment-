@@ -1,0 +1,16 @@
+{
+  "employeeUser": {
+    "username": "employee_user",
+    "password": "Password123!",
+    "name": "John Doe"
+  },
+  "supervisorUser": {
+    "username": "supervisor_user",
+    "password": "Password123!",
+    "name": "Jane Supervisor"
+  },
+  "trainingCourse": {
+    "name": "Safety Protocol 2026",
+    "id": "SFT-001"
+  }
+}
