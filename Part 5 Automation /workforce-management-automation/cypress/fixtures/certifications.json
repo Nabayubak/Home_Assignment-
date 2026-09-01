@@ -1,0 +1,17 @@
+{
+  "validCert": {
+    "name": "AWS Cloud Practitioner",
+    "expiryDate": "2027-12-31",
+    "status": "Active"
+  },
+  "expiringSoonCert": {
+    "name": "First Aid Certification",
+    "expiryDate": "2026-09-15",
+    "status": "Expiring Soon"
+  },
+  "expiredCert": {
+    "name": "OSHA Safety Training",
+    "expiryDate": "2025-01-01",
+    "status": "Expired"
+  }
+}
